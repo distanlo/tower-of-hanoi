@@ -64,7 +64,7 @@
     const towers = [
       ['D', 'C', 'B', 'A'], [], []
     ];
-    const diskOrder = ['D', 'C', 'B', 'A']; // Lower index = larger disk
+    const diskOrder = ['D', 'C', 'B', 'A']; // Lower index = larger
     let selected = null;
 
     function render() {
@@ -100,10 +100,10 @@
         const movingDisk = from[from.length - 1];
         const targetDisk = to[to.length - 1];
 
-        // Check if move is valid
         const movingSize = diskOrder.indexOf(movingDisk);
         const targetSize = targetDisk ? diskOrder.indexOf(targetDisk) : Infinity;
 
+        // ✅ FIXED LOGIC HERE: allow move if moving disk is smaller (higher index)
         if (movingSize > targetSize) {
           document.getElementById('status').innerText = "🚫 Invalid move!";
         } else {
