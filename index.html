@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tower of Hanoi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f4f0f5;
+    }
+    h1 {
+      margin-top: 20px;
+    }
+    .game {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 40px;
+    }
+    .tower {
+      width: 100px;
+      height: 250px;
+      background: #ccc;
+      border: 2px solid #999;
+      position: relative;
+      cursor: pointer;
+    }
+    .peg {
+      position: absolute;
+      bottom: 0;
+      width: 10px;
+      height: 100%;
+      background: #555;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .disk {
+      position: absolute;
+      height: 25px;
+      border-radius: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .disk.A { width: 40px; background: #3f87ff; }
+    .disk.B { width: 60px; background: #ffcc00; }
+    .disk.C { width: 80px; background: #2ecc71; }
+    .disk.D { width: 100px; background: #e74c3c; }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tower of Hanoi</h1>
+  <div class="game">
+    <div class="tower" onclick="towerClicked(0)"><div class="peg"></div></div>
+    <div class="tower" onclick="towerClicked(1)"><div class="peg"></div></div>
+    <div class="tower" onclick="towerClicked(2)"><div class="peg"></div></div>
+  </div>
+  <div id="status">Click a tower to move disks</div>
+
+  <script>
+    const towers = [
+      ['D', 'C', 'B', 'A'], [], []
+    ];
+    const diskOrder = ['D', 'C', 'B', 'A'];
+    let selected = null;
+
+    function render() {
+      document.querySelectorAll('.tower').forEach((towerEl, i) => {
+        // Remove existing disks
+        towerEl.querySelectorAll('.disk').forEach(d => d.remove());
+
+        // Draw disks
+        towers[i].forEach((disk, index) => {
+          const div = document.createElement('div');
+          div.className = 'disk ' + disk;
+          div.style.bottom = `${index * 28}px`;
+          towerEl.appendChild(div);
+        });
+      });
+
+      // Check for win
+      if (towers[2].length === 4) {
+        document.getElementById('status').innerText = "🎉 You Win!";
+      }
+    }
+
+    function towerClicked(index) {
+      if (selected === null) {
+        if (towers[index].length === 0) return;
+        selected = index;
+        document.getElementById('status').innerText = `Selected Tower ${index + 1}`;
+      } else {
+        if (selected === index) {
+          selected = null;
+          document.getElementById('status').innerText = "Cancelled move.";
+          return;
+        }
+        const from = towers[selected];
+        const to = towers[index];
+        const movingDisk = from[from.length - 1];
+        const targetDisk = to[to.length - 1];
+
+        if (!targetDisk || diskOrder.indexOf(movingDisk) < diskOrder.indexOf(targetDisk)) {
+          to.push(from.pop());
+          document.getElementById('status').innerText = `Moved ${movingDisk} to Tower ${index + 1}`;
+        } else {
+          document.getElementById('status').innerText = "🚫 Invalid move!";
+        }
+        selected = null;
+        render();
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
