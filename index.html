@@ -64,15 +64,12 @@
     const towers = [
       ['D', 'C', 'B', 'A'], [], []
     ];
-    const diskOrder = ['D', 'C', 'B', 'A'];
+    const diskOrder = ['D', 'C', 'B', 'A']; // Lower index = larger disk
     let selected = null;
 
     function render() {
       document.querySelectorAll('.tower').forEach((towerEl, i) => {
-        // Remove existing disks
         towerEl.querySelectorAll('.disk').forEach(d => d.remove());
-
-        // Draw disks
         towers[i].forEach((disk, index) => {
           const div = document.createElement('div');
           div.className = 'disk ' + disk;
@@ -81,7 +78,6 @@
         });
       });
 
-      // Check for win
       if (towers[2].length === 4) {
         document.getElementById('status').innerText = "🎉 You Win!";
       }
@@ -98,17 +94,23 @@
           document.getElementById('status').innerText = "Cancelled move.";
           return;
         }
+
         const from = towers[selected];
         const to = towers[index];
         const movingDisk = from[from.length - 1];
         const targetDisk = to[to.length - 1];
 
-        if (!targetDisk || diskOrder.indexOf(movingDisk) < diskOrder.indexOf(targetDisk)) {
+        // Check if move is valid
+        const movingSize = diskOrder.indexOf(movingDisk);
+        const targetSize = targetDisk ? diskOrder.indexOf(targetDisk) : Infinity;
+
+        if (movingSize > targetSize) {
+          document.getElementById('status').innerText = "🚫 Invalid move!";
+        } else {
           to.push(from.pop());
           document.getElementById('status').innerText = `Moved ${movingDisk} to Tower ${index + 1}`;
-        } else {
-          document.getElementById('status').innerText = "🚫 Invalid move!";
         }
+
         selected = null;
         render();
       }
