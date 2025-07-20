@@ -2,53 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tower of Hanoi</title>
+  <title>Tower of Hanoi – Deluxe Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #1e1e2f, #14141f);
+      color: #eee;
       text-align: center;
-      background: #f4f0f5;
     }
     h1 {
-      margin-top: 20px;
+      margin: 30px 0 10px;
+      font-size: 2.5rem;
+      color: #00ffd5;
+      text-shadow: 0 0 10px #00ffd5aa;
+    }
+    #status {
+      margin: 10px 0 30px;
+      font-weight: bold;
+      color: #fffd92;
+      font-size: 1.2rem;
     }
     .game {
       display: flex;
-      justify-content: space-around;
-      margin-top: 40px;
+      justify-content: center;
+      gap: 30px;
+      padding: 0 10px;
     }
     .tower {
-      width: 100px;
-      height: 250px;
-      background: #ccc;
-      border: 2px solid #999;
+      width: 120px;
+      height: 280px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 255, 255, 0.1);
       position: relative;
+      box-shadow: 0 0 15px rgba(0, 255, 213, 0.1);
       cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .tower:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 255, 213, 0.3);
     }
     .peg {
       position: absolute;
       bottom: 0;
-      width: 10px;
+      width: 12px;
       height: 100%;
-      background: #555;
+      background: #777;
       left: 50%;
       transform: translateX(-50%);
+      border-radius: 5px;
     }
     .disk {
       position: absolute;
-      height: 25px;
-      border-radius: 5px;
+      height: 26px;
+      border-radius: 8px;
       left: 50%;
       transform: translateX(-50%);
+      box-shadow: 0 0 10px rgba(255,255,255,0.2);
+      transition: bottom 0.3s ease;
     }
-    .disk.A { width: 40px; background: #3f87ff; }
-    .disk.B { width: 60px; background: #ffcc00; }
-    .disk.C { width: 80px; background: #2ecc71; }
-    .disk.D { width: 100px; background: #e74c3c; }
-    #status {
-      margin-top: 20px;
-      font-weight: bold;
-    }
+    .disk.A { width: 40px; background: #00ffd5; }
+    .disk.B { width: 60px; background: #ffaa00; }
+    .disk.C { width: 80px; background: #7fff00; }
+    .disk.D { width: 100px; background: #ff4b91; }
   </style>
 </head>
 <body>
