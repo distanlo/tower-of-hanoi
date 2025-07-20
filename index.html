@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <title>Tower of Hanoi – Deluxe Edition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tower of Hanoi – Deluxe Mobile Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fireworks-js@2/dist/fireworks.js"></script>
   <style>
     body {
       margin: 0;
@@ -13,27 +14,35 @@
       color: #eee;
       text-align: center;
     }
+
     h1 {
       margin: 30px 0 10px;
-      font-size: 2.5rem;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
       color: #00ffd5;
       text-shadow: 0 0 10px #00ffd5aa;
     }
+
     #status {
       margin: 10px 0 30px;
       font-weight: bold;
       color: #fffd92;
-      font-size: 1.2rem;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      padding: 0 10px;
     }
+
     .game {
       display: flex;
       justify-content: center;
-      gap: 30px;
-      padding: 0 10px;
+      gap: 5vw;
+      padding: 0 5vw;
+      max-width: 100%;
     }
+
     .tower {
-      width: 120px;
-      height: 280px;
+      flex: 1;
+      max-width: 100px;
+      height: 40vh;
+      min-height: 200px;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 12px;
       backdrop-filter: blur(8px);
@@ -43,46 +52,49 @@
       cursor: pointer;
       transition: transform 0.2s;
     }
+
     .tower:hover {
       transform: scale(1.05);
       box-shadow: 0 0 20px rgba(0, 255, 213, 0.3);
     }
+
     .peg {
       position: absolute;
       bottom: 0;
-      width: 12px;
+      width: 8px;
       height: 100%;
       background: #777;
       left: 50%;
       transform: translateX(-50%);
       border-radius: 5px;
     }
+
     .disk {
       position: absolute;
-      height: 26px;
+      height: 6vh;
+      min-height: 20px;
       border-radius: 8px;
       left: 50%;
       transform: translateX(-50%);
       box-shadow: 0 0 10px rgba(255,255,255,0.2);
       transition: bottom 0.3s ease;
     }
-    .disk.A { width: 40px; background: #00ffd5; }
-    .disk.B { width: 60px; background: #ffaa00; }
-    .disk.C { width: 80px; background: #7fff00; }
-    .disk.D { width: 100px; background: #ff4b91; }
+
+    .disk.A { width: 35%; background: #00ffd5; }
+    .disk.B { width: 50%; background: #ffaa00; }
+    .disk.C { width: 65%; background: #7fff00; }
+    .disk.D { width: 80%; background: #ff4b91; }
+
+    #fireworks-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+    }
   </style>
-<script src="https://cdn.jsdelivr.net/npm/fireworks-js@2/dist/fireworks.js"></script>
-<style>
-  #fireworks-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 999;
-  }
-</style>
 </head>
 <body>
   <h1>Tower of Hanoi</h1>
@@ -92,6 +104,7 @@
     <div class="tower" onclick="towerClicked(2)"><div class="peg"></div></div>
   </div>
   <div id="status">Click a tower to move disks</div>
+  <div id="fireworks-container"></div>
 
   <script>
     const towers = [
@@ -107,19 +120,22 @@
       'D': 4
     };
 
+    let fireworksInstance = null;
+
     function render() {
       document.querySelectorAll('.tower').forEach((towerEl, i) => {
         towerEl.querySelectorAll('.disk').forEach(d => d.remove());
         towers[i].forEach((disk, index) => {
           const div = document.createElement('div');
           div.className = 'disk ' + disk;
-          div.style.bottom = `${index * 28}px`;
+          div.style.bottom = `${index * 7}vh`;
           towerEl.appendChild(div);
         });
       });
 
       if (towers[2].length === 4) {
         document.getElementById('status').innerText = "🎉 You Win!";
+        launchFireworks();
       }
     }
 
@@ -150,6 +166,33 @@
         selected = null;
         render();
       }
+    }
+
+    function launchFireworks() {
+      const container = document.getElementById('fireworks-container');
+
+      if (fireworksInstance) {
+        fireworksInstance.stop();
+      }
+
+      fireworksInstance = new Fireworks(container, {
+        hue: { min: 0, max: 360 },
+        rocketsPoint: { min: 0.2, max: 0.8 },
+        speed: 2,
+        acceleration: 1.05,
+        friction: 0.98,
+        gravity: 1,
+        particles: 100,
+        trace: 3,
+        explosion: 5,
+        autoresize: true,
+        brightness: { min: 50, max: 80 },
+        decay: { min: 0.015, max: 0.03 },
+        mouse: { click: false, move: false, max: 0 }
+      });
+
+      fireworksInstance.start();
+      setTimeout(() => fireworksInstance.stop(), 5000);
     }
 
     render();
